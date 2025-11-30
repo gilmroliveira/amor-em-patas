@@ -9,14 +9,14 @@ const Navbar = () => {
   return (
     <nav className="sticky top-0 z-50 bg-card/80 backdrop-blur-lg border-b border-border shadow-sm">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-12">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
+          <Link to="/" className="flex items-center gap-1.5 group">
             <div className="relative">
-              <Heart className="h-8 w-8 text-primary group-hover:scale-110 transition-transform" />
-              <PawPrint className="h-4 w-4 text-accent absolute -bottom-1 -right-1 group-hover:rotate-12 transition-transform" />
+              <Heart className="h-6 w-6 text-primary group-hover:scale-110 transition-transform" />
+              <PawPrint className="h-3 w-3 text-accent absolute -bottom-0.5 -right-0.5 group-hover:rotate-12 transition-transform" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            <span className="text-base font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               Amor em Patas
             </span>
           </Link>
