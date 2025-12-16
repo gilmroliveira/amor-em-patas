@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Amor em Patas - Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { margin-bottom: 10px; }
+    form { margin-bottom: 20px; }
+    input, button { padding: 5px 10px; margin: 3px 0; display: block; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+    .card { border: 1px solid #ddd; border-radius: 8px; padding: 10px; }
+    .status { font-size: 12px; color: gray; }
+    .concluida { text-decoration: line-through; color: gray; }
+    img { max-width: 100%; border-radius: 8px; }
+    .buttons { margin-top: 8px; }
+    .buttons button { margin-right: 4px; display: inline-block; }
+  </style>
+</head>
+<body>
+  <h1>Amor em Patas - Demonstração Backend</h1>
+
+  <h2>Cadastrar novo animal</h2>
+  <form id="form-animal">
+    <input type="text" id="nome" placeholder="Nome" required>
+    <input type="text" id="especie" placeholder="Espécie (Cachorro, Gato...)" required>
+    <input type="number" id="idade" placeholder="Idade (anos)">
+    <input type="text" id="sexo" placeholder="Sexo (Macho/Fêmea)">
+    <input type="text" id="descricao" placeholder="Descrição">
+    <button type="submit">Cadastrar</button>
+  </form>
+
+  <h2>Animais cadastrados</h2>
+  <div id="lista-animais" class="grid"></div>
+
+  <script>
+    const API_URL = 'http://localhost:3001/api/animais';
+
+    async function carregarAnimais() {
+      try {
+        const resp = await fetch(API_URL);
+        const animais = await resp.json();
+
+        const container = document.getElementById('lista-animais');
+        container.innerHTML = '';
+
+        animais.forEach(animal => {
+          const card = document.createElement('div');
+          card.className = 'card';
+
+          // Ajuste aqui para usar imagens reais se quiser
+          const img = document.createElement('img');
+          img.src = 'https://placekitten.com/300/200'; // imagem exemplo
+          img.alt = animal.nome;
+
+          const title = document.createElement('h3');
+          title.textContent = `${animal.nome} (${animal.especie})`;
+
+          const info = document.createElement('p');
+          info.textContent = `Idade: ${animal.idade ?? 'não informada'} | Sexo: ${animal.sexo ?? '-'}`;
+
+          const desc = document.createElement('p');
+          desc.textContent = animal.descricao || '';
+
+          const status = document.createElement('p');
+          status.className = 'status';
+          status.textContent = `Status: ${animal.status}`;
+
+          const buttonsDiv = document.createElement('div');
+          buttonsDiv.className = 'buttons';
+
+          const btnExcluir = document.createElement('button');
+          btnExcluir.textContent = 'Excluir';
+          btnExcluir.onclick = () => excluirAnimal(animal.id);
+
+          buttonsDiv.appendChild(btnExcluir);
+
+          card.appendChild(img);
+          card.appendChild(title);
+          card.appendChild(info);
+          card.appendChild(desc);
+          card.appendChild(status);
+          card.appendChild(buttonsDiv);
+
+          container.appendChild(card);
+        });
+      } catch (err) {
+        console.error(err);
+        alert('Erro ao carregar animais (ver console).');
+      }
+    }
+
+    async function criarAnimal(dados) {
+      try {
+        const resp = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dados)
+        });
+        if (!resp.ok) throw new Error('Erro ao criar animal');
+        await carregarAnimais();
+      } catch (err) {
+        console.error(err);
+        alert('Erro ao cadastrar animal.');
+      }
+    }
+
+    async function excluirAnimal(id) {
+      if (!confirm('Tem certeza que deseja excluir este animal?')) return;
+      try {
+        const resp = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        if (!resp.ok) throw new Error('Erro ao excluir');
+        await carregarAnimais();
+      } catch (err) {
+        console.error(err);
+        alert('Erro ao excluir animal.');
+      }
+    }
+
+    document.getElementById('form-animal').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nome = document.getElementById('nome').value.trim();
+      const especie = document.getElementById('especie').value.trim();
+      const idade = document.getElementById('idade').value;
+      const sexo = document.getElementById('sexo').value.trim();
+      const descricao = document.getElementById('descricao').value.trim();
+
+      if (!nome || !especie) {
+        alert('Nome e espécie são obrigatórios.');
+        return;
+      }
+
+      criarAnimal({
+        nome,
+        especie,
+        idade: idade ? Number(idade) : null,
+        sexo,
+        descricao
+      });
+
+      e.target.reset();
+    });
+
+    carregarAnimais();
+  </script>
+</body>
+</html>
