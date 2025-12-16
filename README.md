@@ -1,73 +1,215 @@
-# Welcome to your Lovable project
+# Amor em Patas - Site de Adoção de Animais
 
-## Project info
+**Sistema completo de adoção de animais com frontend React/TypeScript/TailwindCSS, backend Node.js/Express e banco MariaDB/MySQL.**
 
-**URL**: https://lovable.dev/projects/e1958bee-0353-44b5-bffc-6e533ac8343e
+[![Backend Status](https://img.shields.io/badge/backend-Node.js%20%7C%20Express-greenhttps://github.com/gilmroliveira/amor-em-phttps://img.shields.io/badge/frontend-Reacthttps://github.com/gilmroliveira/amor-em-phttps://img.shields.io/badge/database-Mariahttps://github.com/gilmroliveira/amor-em-pão Geral
 
-## How can I edit this code?
+Sistema completo para adoção de animais que integra:
+- **Frontend**: React + TypeScript + TailwindCSS (clonado e adaptado de `fabricio-tech/site-de-peludos`)
+- **Backend**: API RESTful em Node.js + Express (criado do zero seguindo padrão MVC)
+- **Banco**: MariaDB/MySQL com 4 tabelas relacionais (baseado no modelo SQL fornecido)
 
-There are several ways of editing your application.
+ 🏗️ Como Foi Criado
 
-**Use Lovable**
+| **Parte** | **Origem** | **Modificações** |
+|-----------|------------|------------------|
+| **Frontend** | `git clone https://github.com/fabricio-tech/site-de-peludos.git` | Mantido original + integração API backend |
+| **Backend** | Criado manualmente | Padrão MVC (Models, Views, Controllers) dos projetos anteriores |
+| **Banco** | Script `sql_amor_em_patas.sql` fornecido | Adaptado para MariaDB/MySQL + dados de exemplo |
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e1958bee-0353-44b5-bffc-6e533ac8343e) and start prompting.
+ 📊 Scripts Criados
 
-Changes made via Lovable will be committed automatically to this repo.
+ 1. Banco de Dados (`database/sql_amor_em_patas.sql`)
+**Propósito**: Criar estrutura completa com 4 tabelas relacionais + dados de teste
 
-**Use your preferred IDE**
+```sql
+-- 4 Tabelas com relacionamentos FK
+CREATE TABLE animais    -- Animais para adoção
+CREATE TABLE adotantes  -- Usuários interessados
+CREATE TABLE adocoes    -- Registros de adoção (FK animais + adotantes)
+CREATE TABLE administradores -- Admins do sistema
+```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+**Dados de exemplo inseridos**:
+- 3 animais (Luna, Thor, Mel)
+- 2 adotantes (Maria, Carlos)
+- 1 adoção de teste
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+ 2. Backend Node.js (`backend/src/`)
+ **Configuração** (`config/db.js`)
+```js
+// Conecta Node → MariaDB usando variáveis .env
+const connection = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
+});
+```
 
-Follow these steps:
+ **Models** (camada de dados)
+| Arquivo | Função |
+|---------|--------|
+| `animalModel.js` | CRUD animais (`listarTodos`, `criar`, `atualizarStatus`, `remover`) |
+| `adotanteModel.js` | CRUD adotantes (`listarTodos`, `criar`) |
+| `adocaoModel.js` | Listar adoções com JOIN (animal + adotante) |
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+ **Controllers** (lógica de negócio)
+| Arquivo | Endpoints |
+|---------|-----------|
+| `animaisController.js` | `GET/POST /api/animais` |
+| `adotantesController.js` | `GET/POST /api/adotantes` |
+| `adocoesController.js` | `GET/POST /api/adocoes` |
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+ **Rotas** (`routes/*.js`)
+```js
+// Exemplo: animaisRoutes.js
+router.get('/', animaisController.listar);  // GET /api/animais
+router.post('/', animaisController.criar);  // POST /api/animais
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
+ **Servidor** (`server.js`)
+```js
+app.use(cors());                    // Permite frontend acessar API
+app.use(bodyParser.json());        // Lê JSON das requisições
+app.use('/api/animais', animaisRoutes);
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+ 3. Configuração `.env` (`backend/.env`)
+**Propósito**: Separar credenciais do banco do código
+
+```env
+DB_HOST=localhost        # Servidor MariaDB
+DB_USER=root             # Usuário do banco
+DB_PASSWORD=senha123     # Senha do banco
+DB_NAME=amor_em_patas    # Nome do banco
+PORT=3001                # Porta da API
+```
+
+ 🛠️ Comandos Exatos Utilizados
+
+ 1. Clonar Frontend
+```powershell
+cd C:\projetos
+git clone https://github.com/fabricio-tech/site-de-peludos.git amor-em-patas
+cd amor-em-patas
+```
+
+ 2. Criar Backend
+```powershell
+mkdir backend
+cd backend
+npm init -y
+npm install express mysql2 cors dotenv body-parser
+npm install --save-dev nodemon
+mkdir src\config src\models src\controllers src\routes
+```
+
+ 3. Ajustar package.json (backend)
+```json
+"scripts": {
+  "start": "node src/server.js",
+  "dev": "nodemon src/server.js"
+}
+```
+
+ 4. Criar Banco
+```sql
+-- Executado no MariaDB Workbench ou mysql -u root -p
+SOURCE database/sql_amor_em_patas.sql;
+```
+
+ 🚀 Guia de Instalação (Professor)
+
+ Pré-requisitos
+```
+☑ Node.js LTS
+☑ MariaDB/MySQL rodando
+☑ Git
+```
+
+ 1. Clonar e Instalar
+```powershell
+cd C:\projetos
+git clone https://github.com/gilmroliveira/amor-em-patas.git
+cd amor-em-patas
+```
+
+ 2. Banco de Dados
+```sql
+-- MariaDB Workbench ou terminal
+USE amor_em_patas;
+SHOW TABLES;           -- Deve mostrar 4 tabelas
+SELECT * FROM animais; -- Deve mostrar 3 animais de exemplo
+```
+
+ 3. Backend
+```powershell
+cd backend
+npm install
+# Criar .env com suas credenciais MariaDB
+npm run dev
+```
+**Verificar**: `http://localhost:3001/api/animais` → JSON com 3 animais
+
+ 4. Frontend
+```powershell
+cd frontend  # ou pasta do React original
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## 📡 Endpoints da API (Postman)
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+| **Endpoint** | **Método** | **Função** | **Exemplo Body** |
+|--------------|------------|------------|------------------|
+| `/api/animais` | `GET` | Listar animais | - |
+| `/api/animais` | `POST` | Cadastrar animal | `{"nome":"Rex","especie":"Cachorro"}` |
+| `/api/adotantes` | `GET` | Listar adotantes | - |
+| `/api/adocoes` | `GET` | Listar adoções | - |
 
-**Use GitHub Codespaces**
+ 🎯 Funcionalidades Entregues
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+| ✅ **Implementado** | **Descrição** |
+|-------------------|---------------|
+| **Banco completo** | 4 tabelas + relacionamentos FK + dados teste |
+| **API REST** | 6 endpoints funcionais |
+| **MVC Backend** | Models/Controllers/Routes organizados |
+| **Config .env** | Credenciais seguras |
+| **CORS habilitado** | Frontend → Backend |
+| **README técnico** | Guia completo para professor |
 
-## What technologies are used for this project?
+## 📁 Estrutura Final do Projeto
 
-This project is built with:
+```
+amor-em-patas/
+├── backend/                 [NOVO - Criado do zero]
+│   ├── src/                 [MVC completo]
+│   │   ├── config/db.js     [Conexão banco]
+│   │   ├── models/          [3 models SQL]
+│   │   ├── controllers/     [3 controllers]
+│   │   ├── routes/          [3 routers]
+│   │   └── server.js
+│   ├── package.json         [Dependências npm]
+│   └── .env.example         [Modelo configuração]
+├── frontend/                [ORIGINAL - fabricio-tech]
+├── database/
+│   └── sql_amor_em_patas.sql [Script banco - ADAPTADO]
+├── README.md                [ESTE ARQUIVO]
+└── .gitignore               [Ignora node_modules]
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+ 📞 Troubleshooting (Professor)
 
-## How can I deploy this project?
+| **Erro** | **Solução** |
+|----------|-------------|
+| `Access denied` | Verificar `.env` (senha root) |
+| `Unknown database` | Rodar `sql_amor_em_patas.sql` |
+| `CORS error` | Backend precisa `npm run dev` |
+| `404 API` | Porta 3001 (`http://localhost:3001`) |
 
-Simply open [Lovable](https://lovable.dev/projects/e1958bee-0353-44b5-bffc-6e533ac8343e) and click on Share -> Publish.
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+<div align="center">
+  Gilmar Oliveira - Desenvolvedor Fullstack<br>
+  Base: `fabricio-tech/site-de-peludos` + Backend original
+</div>
