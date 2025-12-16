@@ -213,3 +213,97 @@ amor-em-patas/
   Gilmar Oliveira - Desenvolvedor Fullstack<br>
   Base: `fabricio-tech/site-de-peludos` + Backend original
 </div>
+🐾 Demo Frontend Simples (demo-frontend)
+Além do frontend principal em React, o projeto possui uma pasta demo-frontend/ criada especialmente para demonstração didática do backend (CRUD de animais) de forma simples e direta, sem precisar entender toda a estrutura do React.
+
+Objetivo da demo
+Mostrar claramente:
+
+Criação de animais (INSERT no banco).
+
+Listagem de animais (SELECT).
+
+Exclusão de animais (DELETE).
+
+Usar a mesma API do backend (Node + Express + MariaDB) que foi desenvolvida no projeto.
+
+Facilitar a apresentação para o professor, com uma interface mínima e funcional em HTML + JavaScript puro.
+
+Localização
+text
+amor-em-patas/
+  demo-frontend/
+    index.html   ⟵ interface simples de teste do backend
+Como usar a demo
+Iniciar o backend:
+
+bash
+cd backend
+npm run dev
+# API em: http://localhost:3001
+Abrir a interface de demonstração:
+
+Opção 1 (Explorador de Arquivos):
+
+Vá até amor-em-patas/demo-frontend
+
+Dê duplo clique em index.html
+
+Opção 2 (VS Code + Live Server):
+
+Abra a pasta demo-frontend no VS Code
+
+Clique com o botão direito em index.html → “Open with Live Server”
+
+Recursos da tela de demo
+
+Na página demo-frontend/index.html é possível:
+
+Cadastrar novo animal:
+
+Preencher nome, espécie, idade, sexo e descrição.
+
+Ao clicar em “Cadastrar”, a página envia um POST para:
+
+POST http://localhost:3001/api/animais
+
+O novo animal aparece imediatamente na lista.
+
+Listar animais cadastrados:
+
+Ao carregar a página, é feito um GET para:
+
+GET http://localhost:3001/api/animais
+
+Cada animal é exibido em um “card” simples com imagem ilustrativa, nome, espécie, idade, descrição e status.
+
+Excluir animal:
+
+Cada card possui um botão “Excluir”.
+
+Ao clicar, é enviado um:
+
+DELETE http://localhost:3001/api/animais/{id}
+
+O card é removido da tela e o registro é deletado do banco.
+
+Como usar na apresentação
+Na apresentação para o professor, a sequência sugerida é:
+
+Mostrar o banco MariaDB com as tabelas (animais, adotantes, adocoes, etc.).
+
+Abrir o backend rodando (terminal com npm run dev).
+
+Abrir a página demo-frontend/index.html.
+
+Demonstrar:
+
+Cadastro de um novo animal (formulário → aparece na lista → SELECT * FROM animais no banco).
+
+Exclusão de um animal (botão “Excluir” → some da lista → some da tabela no banco).
+
+Explicar que:
+
+A demo é uma interface simplificada para visualizar o funcionamento da API.
+
+O frontend principal do projeto continua sendo o app React na raiz do repositório.
